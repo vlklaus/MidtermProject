@@ -14,8 +14,6 @@ List<Product> Products = new List<Product>() {
     new Product("Milkshake","Drink",4.30m,"A milkshake is a sweet, cold beverage made by blending milk, ice cream, and flavorings. It can also be made with non-dairy products, such as plant milks, and dry ingredients like fruit, nuts, seeds, candy, or cookies. Milkshakes are traditionally served with whipped cream as topping in a tall glass with a straw. "),
     new Product("Grilled Cheese","Sandwich",4.30m,"Grilled cheese is a classic American sandwich made with buttered and toasted bread and cheese, and is sometimes known as a toasted sandwich or cheese toastie. The sandwich is made by heating slices of cheese between bread slices with butter or mayonnaise on a pan, griddle, or toaster until the bread browns and the cheese melts. Grilled cheese is inexpensive, simple to make, and has the gooey goodness of melted cheese and the crunchy warmth of toasted bread. \r\n\r\nWikipedia\r\nGrilled cheese - Wikipedia\r\nThe grilled cheese (sometimes known as a toasted sandwich or cheese toastie) is a hot cheese sandwich typically prepared by heating slices of cheese between slices of bread with a cooking fat such as butter or mayonnaise on a frying pan, griddle, or sandwich toaster, until the bread browns and the cheese melts.\r\n\r\nNatasha's Kitchen\r\nGrilled Cheese Sandwich Recipe (VIDEO) - Natasha's Kitchen\r\nAug 13, 2021 — What is Grilled Cheese? Grilled cheese is a classic American sandwich that has been around since 1920. It is a hot sandwich made with buttered and toasted bread and originally filled with American cheese, but is now commonly made with one or more different cheeses.\r\n\r\nwisconsincheese.com\r\nGrilled Cheese\r\nIt's got both the gooey goodness of melted cheese and the crunchy warmth of toasted bread. And a grilled cheese sandwich doesn't ask a lot of you – it's inexpensive and simple to make. It's easy-going, too.\r\nGenerative AI is experimental.\r\n"),
     new Product("Bagel Egg and Cheese Sandwich","Sandwich",5.00m,"An egg sandwich is a sandwich with some kind of cooked egg filling. Fried eggs, scrambled eggs, omelette, sliced boiled eggs and egg salad (a mix of chopped cooked egg and mustard and mayonnaise) are popular options."),
-
-
 };
 
 //next step is Display menu
@@ -23,6 +21,37 @@ List<Product> Products = new List<Product>() {
 // Ask for payment type and process payment
 // Display receipt
 // Return to menu for new order
+
+Console.WriteLine("Welcome! What would you like?");
+DisplayMenu(Products);
+int input = 0;
+while (true)
+{
+    try
+    {
+        input = int.Parse(Console.ReadLine());
+        if (input < 1 || input > Products.Count)
+        {
+            Console.WriteLine("Invalid input, please choose something on the menu.");
+            continue;
+        }
+        break;
+    }
+    catch
+    {
+        Console.WriteLine("Invalid input, please choose something on the menu.");
+    }
+}
+int quantity = 0;
+for (int i = 1; i <= Products.Count; i++)
+{
+    if (i == input)
+    {
+        Console.WriteLine("How many would you like?");
+        
+    }
+}
+
 
 //static void Main(string[] args, List<Product> Products)
 //{
@@ -65,14 +94,15 @@ List<Product> Products = new List<Product>() {
 //    throw new NotImplementedException();
 //}
 
-//static void DisplayMenu(List<Product> Products)
-//{
-//    Console.WriteLine("Menu:");
-//    for (int i = 0; i < Products.Count; i++)
-//    {
-//        Console.WriteLine($"{i + 1}. {Products[i].Name} - ${Products[i].Price}");
-//    }
-//}   
-      
-          
- 
+static void DisplayMenu(List<Product> Products)
+{
+    Console.WriteLine("Menu:");
+    int count = 1;
+    foreach (Product p in Products)
+    {
+        Console.WriteLine($"{count,-5}. {p.Name,-20} - {p.Price,50:c}");
+        count++;
+    }
+}
+
+
