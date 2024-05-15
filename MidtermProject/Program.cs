@@ -16,41 +16,83 @@ List<Product> Products = new List<Product>() {
     new Product("Bagel Egg and Cheese Sandwich","Sandwich",5.00m,"An egg sandwich is a sandwich with some kind of cooked egg filling. Fried eggs, scrambled eggs, omelette, sliced boiled eggs and egg salad (a mix of chopped cooked egg and mustard and mayonnaise) are popular options."),
 };
 
+List<string> cart = new List<string>();
+
 //next step is Display menu
 // Calculate subtotal, sales tax, grand total
 // Ask for payment type and process payment
 // Display receipt
 // Return to menu for new order
 
-Console.WriteLine("Welcome! What would you like?");
-DisplayMenu(Products);
-int input = 0;
-while (true)
+Console.WriteLine("Welcome Temp Cafe Name");
+Console.WriteLine();
+
+bool addMoreItems = true;
+
+while (addMoreItems)
 {
-    try
+    Console.WriteLine("Please type in the number of the item you would like.");
+    DisplayMenu(Products);
+    int input = 0;
+    while (true)
     {
-        input = int.Parse(Console.ReadLine());
-        if (input < 1 || input > Products.Count)
+        try
+        {
+            input = int.Parse(Console.ReadLine());
+            if (input < 1 || input > Products.Count)
+            {
+                Console.WriteLine("Invalid input, please choose something on the menu.");
+                continue;
+            }
+            break;
+        }
+        catch
         {
             Console.WriteLine("Invalid input, please choose something on the menu.");
-            continue;
         }
-        break;
     }
-    catch
+    int quantity = 0;
+    for (int i = 1; i <= Products.Count; i++)
     {
-        Console.WriteLine("Invalid input, please choose something on the menu.");
-    }
-}
-int quantity = 0;
-for (int i = 1; i <= Products.Count; i++)
-{
-    if (i == input)
-    {
-        Console.WriteLine("How many would you like?");
+        if (i == input)
+        {
+            Console.WriteLine("How many would you like?");
+            quantity = int.Parse(Console.ReadLine());
+
+            while (quantity < 1)
+            {
+                Console.WriteLine("Please enter a valid quantity.");
+                quantity = int.Parse(Console.ReadLine());
+            }
         
+        }
     }
+
+    Console.WriteLine($"Your total for {Products[input-1].Name} is {quantity * Products[input -1].Price:C}");
+    
+
+
+    while (true)
+    {
+        Console.WriteLine("Would you like to order more? (y/n) ");
+        string response = Console.ReadLine();
+
+        if (response == "y") break;
+        else if (response == "n")
+        {
+            addMoreItems = false;
+            break;
+        } else
+        {
+            Console.WriteLine("Invalid response.");
+        }
+
+    }
+
+
 }
+
+
 
 
 //static void Main(string[] args, List<Product> Products)
