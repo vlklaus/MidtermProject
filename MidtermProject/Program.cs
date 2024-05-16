@@ -16,7 +16,7 @@ List<Product> Products = new List<Product>() {
     new Product("Bagel Egg and Cheese Sandwich","Sandwich",5.00m,"An egg sandwich is a sandwich with some kind of cooked egg filling. Fried eggs, scrambled eggs, omelette, sliced boiled eggs and egg salad (a mix of chopped cooked egg and mustard and mayonnaise) are popular options."),
 };
 
-List<string> cart = new List<string>();
+List<Receipt> receipt = new List<Receipt>();
 
 //next step is Display menu
 // Calculate subtotal, sales tax, grand total
@@ -28,6 +28,7 @@ Console.WriteLine("Welcome Temp Cafe Name");
 Console.WriteLine();
 
 bool addMoreItems = true;
+decimal cost = 0;
 
 while (addMoreItems)
 {
@@ -67,9 +68,13 @@ while (addMoreItems)
         
         }
     }
+    for (int i = 0; i < quantity; i++)
+    {
+        receipt.Add(new Receipt(Products[input -1].Name, Products[input - 1].Price));
+    }
 
-    Console.WriteLine($"Your total for {Products[input-1].Name} is {quantity * Products[input -1].Price:C}");
-    
+    cost += quantity * Products[input - 1].Price;
+    Console.WriteLine($"Your total is {cost:C}");
 
 
     while (true)
@@ -91,50 +96,7 @@ while (addMoreItems)
 
 
 }
-
-
-
-
-//static void Main(string[] args, List<Product> Products)
-//{
-//    while (true)
-//    {
-//        DisplayMenu(Products);
-
-//        Console.WriteLine("Enter the number of the item you want to purchase (or type 'done' to complete the purchase):");
-//        string input = Console.ReadLine();
-
-//        if (input.ToLower() == "done")
-//        {
-//            CompletePurchase();
-//            break;
-//        }
-
-//        if (int.TryParse(input, out int choice) && choice > 0 && choice <= Products.Count)
-//        {
-//            Console.Write("Enter the quantity: ");
-//            if (int.TryParse(Console.ReadLine(), out int quantity) && quantity > 0)
-//            {
-//                Product product = Products[choice - 1];
-//                decimal lineTotal = product.Price * quantity;
-//                Console.WriteLine($"Line Total: ${lineTotal}");
-//            }
-//            else
-//            {
-//                Console.WriteLine("Invalid quantity.");
-//            }
-//        }
-//        else
-//        {
-//            Console.WriteLine("Invalid choice.");
-//        }
-//    }
-//}
-
-//static void CompletePurchase()
-//{
-//    throw new NotImplementedException();
-//}
+DisplayReceipt(receipt,cost);
 
 static void DisplayMenu(List<Product> Products)
 {
@@ -145,6 +107,21 @@ static void DisplayMenu(List<Product> Products)
         Console.WriteLine($"{count,-5}. {p.Name,-20} - {p.Price,50:c}");
         count++;
     }
+}
+
+static void DisplayReceipt(List<Receipt> receipt, decimal cost)
+{
+    Console.WriteLine("Receipt:");
+
+    foreach (Receipt r in receipt)
+    {
+        Console.WriteLine($"{r.Name,-20} {r.Price,50:c}");
+
+    }
+    Console.WriteLine();
+    Console.WriteLine($"Subtotal: {cost}");
+    Console.WriteLine($"Sales tax: 6%");
+    Console.WriteLine($"Total: {cost * 1.06m}");
 }
 
 
