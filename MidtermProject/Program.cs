@@ -1,4 +1,5 @@
 ﻿using MidtermProject;
+using System;
 //menu items and names along with other values
 List<Product> Products = new List<Product>() {
 
@@ -143,19 +144,9 @@ static void GetPaymentType(decimal totalCost)
         if (paymentType == "cash")
         {
             Console.WriteLine("How much is the amount? ");
-            try
+            while (decimal.TryParse(Console.ReadLine(), out cashPayment) == false || cashPayment.ToString().Length < 0)
             {
-                cashPayment = decimal.Parse(Console.ReadLine());
-                if (cashPayment < 0)
-                {
-                    Console.WriteLine("Not a valid form of payment.");
-                    continue;
-                }
-            }
-            catch
-            {
-                Console.WriteLine("Not a valid form of payment.");
-                continue;
+                Console.WriteLine("invalid input, try again...");
             }
 
             decimal cashBack = totalCost - cashPayment;
@@ -181,35 +172,47 @@ static void GetPaymentType(decimal totalCost)
         // credit payment type
         if (paymentType == "credit")
         {
-            Console.WriteLine("Enter credit card number");
-            string creditCardNumber = Console.ReadLine();
-            Console.WriteLine("Enter expiration date (MM/YYYY):");
-            string expirationDate = Console.ReadLine();
-            Console.WriteLine("Enter CVV");
-            string CVVNumber = Console.ReadLine();
+            long creditCardNumber = 0;
+            int expirationDate = 0;
+            int CVVNumber = 0;
+                Console.WriteLine("Enter credit card number");
+                while (long.TryParse(Console.ReadLine(), out creditCardNumber) == false || creditCardNumber.ToString().Length < 16 || creditCardNumber.ToString().Length > 16)
+                {
+                    Console.WriteLine("invalid input, try again...");
+                }
+                Console.WriteLine("Enter expiration date (MMYY):");
+                while (int.TryParse(Console.ReadLine(), out expirationDate) == false || expirationDate.ToString().Length < 4 || expirationDate.ToString().Length > 4)
+                {
+                    Console.WriteLine("invalid input, try again...");
+                }
+                Console.WriteLine("Enter CVV");
+                while (int.TryParse(Console.ReadLine(), out CVVNumber) == false || CVVNumber.ToString().Length < 3 || CVVNumber.ToString().Length > 3)
+                {
+                    Console.WriteLine("invalid input, try again...");
+                }            
             //PROCESS payment
             ProcessCreditCardPayment(totalCost, creditCardNumber, expirationDate, CVVNumber);
             break;
         }
-
-
-        static void ProcessCreditCardPayment(decimal totalCost, string creditCardNumber, string expirationDate, string CVVNumber)
-        {
-            Console.WriteLine($"Processing credit card payment for {totalCost} with card number {creditCardNumber}.");
-        }
-
         //check payment
         if (paymentType == "check")
         {
+            int checkNumber;
             Console.WriteLine("Enter check number");
-            string checkNumber = Console.ReadLine();
+            while (int.TryParse(Console.ReadLine(), out checkNumber) == false || checkNumber.ToString().Length < 4 || checkNumber.ToString().Length > 4)
+            {
+                Console.WriteLine("invalid input, try again...");
+            }
             Console.WriteLine($"Thank you for payment with check number: {checkNumber}"); 
             break ;
         }   
     }
 }
 
-
+static void ProcessCreditCardPayment(decimal totalCost, long creditCardNumber, int expirationDate, int CVVNumber)
+{
+    Console.WriteLine($"Processing credit card payment for {totalCost} with card number {creditCardNumber}.");
+}
 
 
 //add different forms of payment like cash for some and then card for remainder
