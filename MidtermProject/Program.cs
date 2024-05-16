@@ -18,11 +18,11 @@ List<Product> Products = new List<Product>() {
 
 List<Receipt> receipt = new List<Receipt>();
 
-//next step is Display menu
-// Calculate subtotal, sales tax, grand total
-// Ask for payment type and process payment
-// Display receipt
-// Return to menu for new order
+//next step is Display menu X
+// Calculate subtotal, sales tax, grand total X
+
+// Display receipt X
+// Return to menu for new order X
 
 Console.WriteLine("Welcome Temp Cafe Name");
 Console.WriteLine();
@@ -99,7 +99,7 @@ while (addMoreItems)
 decimal totalCost = 0;
 DisplayReceipt(receipt,cost, out totalCost);
 GetPaymentType(totalCost);
-
+//display menu
 
 static void DisplayMenu(List<Product> Products)
 {
@@ -111,7 +111,7 @@ static void DisplayMenu(List<Product> Products)
         count++;
     }
 }
-
+//display Receipt
 static void DisplayReceipt(List<Receipt> receipt, decimal cost, out decimal totalCostMethod)
 {
     Console.WriteLine("Receipt:");
@@ -129,7 +129,7 @@ static void DisplayReceipt(List<Receipt> receipt, decimal cost, out decimal tota
     Console.WriteLine($"Sales tax: 6%");
     Console.WriteLine($"Total: {totalCostMethod:C}");
 }
-
+// Ask for payment type and process payment 
 static void GetPaymentType(decimal totalCost)
 {
     while (true)
@@ -176,14 +176,40 @@ static void GetPaymentType(decimal totalCost)
                 Console.WriteLine("Thank you for your purchase! Come back soon!");
                 break;
             }
+
         }
         // credit payment type
-        
+        if (paymentType == "credit")
+        {
+            Console.WriteLine("Enter credit card number");
+            string creditCardNumber = Console.ReadLine();
+            Console.WriteLine("Enter expiration date (MM/YYYY):");
+            string expirationDate = Console.ReadLine();
+            Console.WriteLine("Enter CVV");
+            string CVVNumber = Console.ReadLine();
+            //PROCESS payment
+            ProcessCreditCardPayment(totalCost, creditCardNumber, expirationDate, CVVNumber);
+            break;
+        }
 
+
+        static void ProcessCreditCardPayment(decimal totalCost, string creditCardNumber, string expirationDate, string CVVNumber)
+        {
+            Console.WriteLine($"Processing credit card payment for {totalCost} with card number {creditCardNumber}.");
+        }
+
+        //check payment
+        if (paymentType == "check")
+        {
+            Console.WriteLine("Enter check number");
+            string checkNumber = Console.ReadLine();
+            Console.WriteLine($"Thank you for payment with check number: {checkNumber}"); 
+            break ;
+        }   
     }
-
-
 }
+
+
 
 
 //add different forms of payment like cash for some and then card for remainder
