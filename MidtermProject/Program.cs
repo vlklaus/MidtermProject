@@ -96,7 +96,10 @@ while (addMoreItems)
 
 
 }
-DisplayReceipt(receipt,cost);
+decimal totalCost = 0;
+DisplayReceipt(receipt,cost, out totalCost);
+GetPaymentType(totalCost);
+
 
 static void DisplayMenu(List<Product> Products)
 {
@@ -109,7 +112,7 @@ static void DisplayMenu(List<Product> Products)
     }
 }
 
-static void DisplayReceipt(List<Receipt> receipt, decimal cost)
+static void DisplayReceipt(List<Receipt> receipt, decimal cost, out decimal totalCostMethod)
 {
     Console.WriteLine("Receipt:");
 
@@ -118,10 +121,69 @@ static void DisplayReceipt(List<Receipt> receipt, decimal cost)
         Console.WriteLine($"{r.Name,-20} {r.Price,50:c}");
 
     }
+
+    totalCostMethod = cost * 1.06m;
+
     Console.WriteLine();
-    Console.WriteLine($"Subtotal: {cost}");
+    Console.WriteLine($"Subtotal: {cost:C}");
     Console.WriteLine($"Sales tax: 6%");
-    Console.WriteLine($"Total: {cost * 1.06m}");
+    Console.WriteLine($"Total: {totalCostMethod:C}");
+}
+
+static void GetPaymentType(decimal totalCost)
+{
+    while (true)
+    {
+        Console.WriteLine("What is your payment type? Cash, credit, or check? ");
+        string paymentType = Console.ReadLine().ToLower().Trim();
+
+        decimal cashPayment = 0;
+
+        // cash payment type
+        if (paymentType == "cash")
+        {
+            Console.WriteLine("How much is the amount? ");
+            try
+            {
+                cashPayment = decimal.Parse(Console.ReadLine());
+                if (cashPayment < 0)
+                {
+                    Console.WriteLine("Not a valid form of payment.");
+                    continue;
+                }
+            }
+            catch
+            {
+                Console.WriteLine("Not a valid form of payment.");
+                continue;
+            }
+
+            decimal cashBack = totalCost - cashPayment;
+
+            if (cashBack > 0)
+            {
+                Console.WriteLine($"Total: {cashBack:C}");
+                totalCost = cashBack;
+                continue;
+            }
+            else if (cashBack < 0)
+            {
+                Console.WriteLine($" Here is your change: {-cashBack:C}");
+                break;
+            }
+            else if (cashBack == 0)
+            {
+                Console.WriteLine("Thank you for your purchase! Come back soon!");
+                break;
+            }
+        }
+        // credit payment type
+        
+
+    }
+
+
 }
 
 
+//add different forms of payment like cash for some and then card for remainder
