@@ -1,5 +1,6 @@
 ﻿using MidtermProject;
 using System;
+using System.ComponentModel.DataAnnotations;
 //menu items and names along with other values
 List<Product> Products = new List<Product>() {
 
@@ -25,7 +26,7 @@ List<Receipt> receipt = new List<Receipt>();
 // Display receipt X
 // Return to menu for new order X
 
-Console.WriteLine("Welcome Temp Cafe Name");
+Console.WriteLine("Welcome to Mythic Matcha Cafe!");
 Console.WriteLine();
 
 bool addMoreItems = true;
@@ -33,8 +34,11 @@ decimal cost = 0;
 
 while (addMoreItems)
 {
-    Console.WriteLine("Please type in the number of the item you would like.");
+    // ordering on menu
     DisplayMenu(Products);
+    Console.WriteLine();
+    
+    Console.Write("Please type in the number of the item you would like: ");
     int input = 0;
     while (true)
     {
@@ -43,47 +47,54 @@ while (addMoreItems)
             input = int.Parse(Console.ReadLine());
             if (input < 1 || input > Products.Count)
             {
-                Console.WriteLine("Invalid input, please choose something on the menu.");
+                Console.Write("Invalid input, please choose something on the menu.");
                 continue;
             }
             break;
         }
         catch
         {
-            Console.WriteLine("Invalid input, please choose something on the menu.");
+            Console.Write("Invalid input, please choose something on the menu.");
         }
     }
+    // quantity of item
     int quantity = 0;
     for (int i = 1; i <= Products.Count; i++)
     {
         if (i == input)
         {
-            Console.WriteLine("How many would you like?");
+            Console.Write("How many would you like? ");
             quantity = int.Parse(Console.ReadLine());
 
             while (quantity < 1)
             {
-                Console.WriteLine("Please enter a valid quantity.");
+                Console.Write("Please enter a valid quantity.");
                 quantity = int.Parse(Console.ReadLine());
             }
         
         }
     }
+    // add items to receipt
     for (int i = 0; i < quantity; i++)
     {
         receipt.Add(new Receipt(Products[input -1].Name, Products[input - 1].Price));
     }
 
+    // cost of order
     cost += quantity * Products[input - 1].Price;
     Console.WriteLine($"Your total is {cost:C}");
 
-
+    // adding more to cart
     while (true)
     {
-        Console.WriteLine("Would you like to order more? (y/n) ");
+        Console.Write("Would you like to order more? (y/n): ");
         string response = Console.ReadLine();
 
-        if (response == "y") break;
+        if (response == "y")
+        {
+            Console.WriteLine();
+            break;
+        }
         else if (response == "n")
         {
             addMoreItems = false;
@@ -97,25 +108,35 @@ while (addMoreItems)
 
 
 }
-decimal totalCost = 0;
-DisplayReceipt(receipt,cost, out totalCost);
-GetPaymentType(totalCost);
-//display menu
+decimal totalCost = cost * 1.06m;
+Console.WriteLine($"\nSubtotal: {cost:C}");
+Console.WriteLine($"Sales tax: 6%");
+Console.WriteLine($"Total: {totalCost:C}");
 
+string paymentForm = "";
+GetPaymentType(totalCost, out paymentForm);
+
+
+DisplayReceipt(receipt,cost, paymentForm);
+
+
+
+//display menu
 static void DisplayMenu(List<Product> Products)
 {
     Console.WriteLine("Menu:");
     int count = 1;
     foreach (Product p in Products)
     {
-        Console.WriteLine($"{count,-5}. {p.Name,-20} - {p.Price,50:c}");
+        Console.WriteLine($"{count,-5}. {p.Name,-20} - {p.Price,50:c}"); // make it look nicer to look at (columns aligned)
         count++;
     }
 }
+
 //display Receipt
-static void DisplayReceipt(List<Receipt> receipt, decimal cost, out decimal totalCostMethod)
+static void DisplayReceipt(List<Receipt> receipt, decimal cost, string paymentForm)
 {
-    Console.WriteLine("Receipt:");
+    Console.WriteLine("\nReceipt:");
 
     foreach (Receipt r in receipt)
     {
@@ -123,19 +144,21 @@ static void DisplayReceipt(List<Receipt> receipt, decimal cost, out decimal tota
 
     }
 
-    totalCostMethod = cost * 1.06m;
-
-    Console.WriteLine();
-    Console.WriteLine($"Subtotal: {cost:C}");
+    Console.WriteLine($"\nSubtotal: {cost:C}");
     Console.WriteLine($"Sales tax: 6%");
-    Console.WriteLine($"Total: {totalCostMethod:C}");
+    Console.WriteLine($"Total: {cost * 1.06m:C}");
+    Console.WriteLine($"\nPayment method {paymentForm}");
+    Console.WriteLine("\nThank you for shopping at Mythic Matcha Cafe! Come again soon!");
 }
+
 // Ask for payment type and process payment 
-static void GetPaymentType(decimal totalCost)
+static void GetPaymentType(decimal totalCost, out string paymentForm)
 {
+    paymentForm = "";
+
     while (true)
-    {
-        Console.WriteLine("What is your payment type? Cash, credit, or check? ");
+    {        
+        Console.Write("\nWhat is your payment type? Cash, credit, or check? ");
         string paymentType = Console.ReadLine().ToLower().Trim();
 
         decimal cashPayment = 0;
@@ -143,13 +166,16 @@ static void GetPaymentType(decimal totalCost)
         // cash payment type
         if (paymentType == "cash")
         {
-            Console.WriteLine("How much is the amount? ");
-            while (decimal.TryParse(Console.ReadLine(), out cashPayment) == false || cashPayment.ToString().Length < 0)
+            
+            Console.Write("How much is the amount? ");
+            while (decimal.TryParse(Console.ReadLine().Trim(), out cashPayment) == false || cashPayment.ToString().Length < 0)
             {
-                Console.WriteLine("invalid input, try again...");
+                Console.WriteLine("Invalid input.");
             }
 
             decimal cashBack = totalCost - cashPayment;
+
+            paymentForm = $" \nCash: {cashPayment:C} \n";
 
             if (cashBack > 0)
             {
@@ -169,50 +195,51 @@ static void GetPaymentType(decimal totalCost)
             }
 
         }
+
         // credit payment type
         if (paymentType == "credit")
         {
+            paymentForm += $"Credit: {Math.Round(totalCost, 2):C}";
             long creditCardNumber = 0;
             int expirationDate = 0;
             int CVVNumber = 0;
-                Console.WriteLine("Enter credit card number");
-                while (long.TryParse(Console.ReadLine(), out creditCardNumber) == false || creditCardNumber.ToString().Length < 16 || creditCardNumber.ToString().Length > 16)
-                {
-                    Console.WriteLine("invalid input, try again...");
-                }
-                Console.WriteLine("Enter expiration date (MMYY):");
-                while (int.TryParse(Console.ReadLine(), out expirationDate) == false || expirationDate.ToString().Length < 4 || expirationDate.ToString().Length > 4)
-                {
-                    Console.WriteLine("invalid input, try again...");
-                }
-                Console.WriteLine("Enter CVV");
-                while (int.TryParse(Console.ReadLine(), out CVVNumber) == false || CVVNumber.ToString().Length < 3 || CVVNumber.ToString().Length > 3)
-                {
-                    Console.WriteLine("invalid input, try again...");
-                }            
-            //PROCESS payment
-            ProcessCreditCardPayment(totalCost, creditCardNumber, expirationDate, CVVNumber);
-            break;
-        }
-        //check payment
-        if (paymentType == "check")
-        {
-            int checkNumber;
-            Console.WriteLine("Enter check number");
-            while (int.TryParse(Console.ReadLine(), out checkNumber) == false || checkNumber.ToString().Length < 4 || checkNumber.ToString().Length > 4)
+
+            Console.Write("Enter credit card number: ");
+            while (long.TryParse(Console.ReadLine().Trim(), out creditCardNumber) == false || creditCardNumber.ToString().Length < 16 || creditCardNumber.ToString().Length > 16)
             {
                 Console.WriteLine("invalid input, try again...");
             }
-            Console.WriteLine($"Thank you for payment with check number: {checkNumber}"); 
+            Console.WriteLine("Enter expiration date (MMYY): ");
+            while (int.TryParse(Console.ReadLine().Trim(), out expirationDate) == false || expirationDate.ToString().Length < 4 || expirationDate.ToString().Length > 4)
+            {
+                Console.WriteLine("invalid input, try again...");
+            }
+            Console.Write("Enter CVV: ");
+            while (int.TryParse(Console.ReadLine().Trim(), out CVVNumber) == false || CVVNumber.ToString().Length < 3 || CVVNumber.ToString().Length > 3)
+            {
+                Console.WriteLine("invalid input, try again...");
+            }
+
+            //PROCESS payment
+            Console.WriteLine($"Processing credit card payment for {Math.Round(totalCost, 2):C} with card number {creditCardNumber.ToString().Substring(creditCardNumber.ToString().Length-4)}.");
+            break;
+        }
+
+        //check payment
+        if (paymentType == "check")
+        {
+            paymentForm += $"check: {Math.Round(totalCost, 2):C}";
+            int checkNumber;
+            Console.Write("Enter check number: ");
+            while (int.TryParse(Console.ReadLine().Trim(), out checkNumber) == false || checkNumber.ToString().Length < 4 || checkNumber.ToString().Length > 4)
+            {
+                Console.WriteLine("Invalid input.");
+            }
+            Console.WriteLine($"Thank you for payment with check number: {checkNumber}");             
             break ;
         }   
     }
 }
 
-static void ProcessCreditCardPayment(decimal totalCost, long creditCardNumber, int expirationDate, int CVVNumber)
-{
-    Console.WriteLine($"Processing credit card payment for {totalCost} with card number {creditCardNumber}.");
-}
-
-
-//add different forms of payment like cash for some and then card for remainder
+// limit decimal places to 2 digits
+// bug when starting with 0 bc int
