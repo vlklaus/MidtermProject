@@ -1,9 +1,9 @@
 ﻿using MidtermProject;
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 //menu items and names along with other values
 List<Product> Products = new List<Product>() {
-
     new Product("Coffee","Drink",1.50m,"Black Coffee"),
     new Product("Croissant","Pastry", 2.00m,"Butter Croissant"),
     new Product("Brownie","Pastry",3.00m,"Chocolate Brownie"),
@@ -17,138 +17,144 @@ List<Product> Products = new List<Product>() {
     new Product("Grilled Cheese","Sandwich",4.30m,"Grilled cheese is a classic American sandwich made with buttered and toasted bread and cheese, and is sometimes known as a toasted sandwich or cheese toastie. The sandwich is made by heating slices of cheese between bread slices with butter or mayonnaise on a pan, griddle, or toaster until the bread browns and the cheese melts. Grilled cheese is inexpensive, simple to make, and has the gooey goodness of melted cheese and the crunchy warmth of toasted bread. \r\n\r\nWikipedia\r\nGrilled cheese - Wikipedia\r\nThe grilled cheese (sometimes known as a toasted sandwich or cheese toastie) is a hot cheese sandwich typically prepared by heating slices of cheese between slices of bread with a cooking fat such as butter or mayonnaise on a frying pan, griddle, or sandwich toaster, until the bread browns and the cheese melts.\r\n\r\nNatasha's Kitchen\r\nGrilled Cheese Sandwich Recipe (VIDEO) - Natasha's Kitchen\r\nAug 13, 2021 — What is Grilled Cheese? Grilled cheese is a classic American sandwich that has been around since 1920. It is a hot sandwich made with buttered and toasted bread and originally filled with American cheese, but is now commonly made with one or more different cheeses.\r\n\r\nwisconsincheese.com\r\nGrilled Cheese\r\nIt's got both the gooey goodness of melted cheese and the crunchy warmth of toasted bread. And a grilled cheese sandwich doesn't ask a lot of you – it's inexpensive and simple to make. It's easy-going, too.\r\nGenerative AI is experimental.\r\n"),
     new Product("Bagel Egg and Cheese Sandwich","Sandwich",5.00m,"An egg sandwich is a sandwich with some kind of cooked egg filling. Fried eggs, scrambled eggs, omelette, sliced boiled eggs and egg salad (a mix of chopped cooked egg and mustard and mayonnaise) are popular options."),
 };
-
-List<Receipt> receipt = new List<Receipt>();
-
-//next step is Display menu X
-// Calculate subtotal, sales tax, grand total X
-
-// Display receipt X
-// Return to menu for new order X
-
-Console.WriteLine("Welcome to Mythic Matcha Cafe!");
-Console.WriteLine();
-
-bool addMoreItems = true;
-decimal cost = 0;
-
-while (addMoreItems)
+//Main Code---------------------------------------------------------------------------------------------------------------          Add File IO
+while (true)
 {
-    // ordering on menu
-    DisplayMenu(Products);
-    Console.WriteLine();
-    
-    Console.Write("Please type in the number of the item you would like: ");
-    int input = 0;
-    while (true)
-    {
-        try
-        {
-            input = int.Parse(Console.ReadLine());
-            if (input < 1 || input > Products.Count)
-            {
-                Console.Write("Invalid input, please choose something on the menu.");
-                continue;
-            }
-            break;
-        }
-        catch
-        {
-            Console.Write("Invalid input, please choose something on the menu.");
-        }
-    }
-    // quantity of item
-    int quantity = 0;
-    for (int i = 1; i <= Products.Count; i++)
-    {
-        if (i == input)
-        {
-            Console.Write("How many would you like? ");
-            quantity = int.Parse(Console.ReadLine());
+    List<Receipt> receipt = new List<Receipt>();
+    bool addMoreItems = true;
+    decimal cost = 0;
+    string answer = "";
 
-            while (quantity < 1)
+    while (addMoreItems)
+    {
+        // ordering on menu
+        DisplayMenu(Products);
+        Console.WriteLine();
+
+        Console.Write("Please type in the number of the item you would like or type 'quit' to end: ");
+        answer = Console.ReadLine();
+        int input = 0;
+        if (answer.ToLower() == "quit") break;
+        while (true)
+        {
+            try
             {
-                Console.Write("Please enter a valid quantity.");
+                input = int.Parse(answer);
+                if (input < 1 || input > Products.Count)
+                {
+                    Console.Write("Invalid input, please choose something on the menu. ");
+                    continue;
+                }
+                break;
+            }
+            catch
+            {
+                Console.Write("Invalid input, please choose something on the menu. ");
+                answer = Console.ReadLine();
+            }
+        }
+        // quantity of item
+        int quantity = 0;
+        for (int i = 1; i <= Products.Count; i++)
+        {
+            if (i == input)
+            {
+                Console.Write("How many would you like? ");
                 quantity = int.Parse(Console.ReadLine());
+
+                while (quantity < 1)
+                {
+                    Console.Write("Please enter a valid quantity.");
+                    quantity = int.Parse(Console.ReadLine());
+                }
+
             }
-        
         }
-    }
-    // add items to receipt
-    for (int i = 0; i < quantity; i++)
-    {
-        receipt.Add(new Receipt(Products[input -1].Name, Products[input - 1].Price));
-    }
-
-    // cost of order
-    cost += quantity * Products[input - 1].Price;
-    Console.WriteLine($"Your total is {cost:C}");
-
-    // adding more to cart
-    while (true)
-    {
-        Console.Write("Would you like to order more? (y/n): ");
-        string response = Console.ReadLine();
-
-        if (response == "y")
+        // add items to receipt
+        for (int i = 0; i < quantity; i++)
         {
-            Console.WriteLine();
-            break;
-        }
-        else if (response == "n")
-        {
-            addMoreItems = false;
-            break;
-        } else
-        {
-            Console.WriteLine("Invalid response.");
+            receipt.Add(new Receipt(Products[input - 1].Name, Products[input - 1].Price));
         }
 
+        // cost of order
+        cost += quantity * Products[input - 1].Price;
+        Console.WriteLine($"Your total is {cost:C}");
+
+        // adding more to cart
+        while (true)
+        {
+            Console.Write("Would you like to order more? (y/n): ");
+            string response = Console.ReadLine();
+
+            if (response == "y")
+            {
+                Console.WriteLine();
+                break;
+            }
+            else if (response == "n")
+            {
+                addMoreItems = false;
+                break;
+            }
+            else
+            {
+                Console.WriteLine("Invalid response.");
+            }
+
+        }
+
+
     }
+    if (answer.ToLower() == "quit") break;
+    decimal totalCost = cost * 1.06m;
+    Console.WriteLine($"\nSubtotal: {cost:C}");
+    Console.WriteLine($"Sales tax: 6%");
+    Console.WriteLine($"Total: {totalCost:C}");
+
+    string paymentForm = "";
+    GetPaymentType(totalCost, out paymentForm);
 
 
+    DisplayReceipt(receipt, cost, paymentForm);
 }
-decimal totalCost = cost * 1.06m;
-Console.WriteLine($"\nSubtotal: {cost:C}");
-Console.WriteLine($"Sales tax: 6%");
-Console.WriteLine($"Total: {totalCost:C}");
-
-string paymentForm = "";
-GetPaymentType(totalCost, out paymentForm);
 
 
-DisplayReceipt(receipt,cost, paymentForm);
-
-
-
+//Methods----------------------------------------------------------------------------------------------
 //display menu
 static void DisplayMenu(List<Product> Products)
 {
-    Console.WriteLine("Menu:");
+    Console.WriteLine(" _____________________________________________");
+    Console.WriteLine("|\t    Mythic Matcha Cafe Menu           |");
+    Console.WriteLine("|_____________________________________________|");
     int count = 1;
     foreach (Product p in Products)
     {
-        Console.WriteLine($"{count,-5}. {p.Name,-20} - {p.Price,50:c}"); // make it look nicer to look at (columns aligned)
+        Console.WriteLine($"|{count,2}. {p.Name,-35} {p.Price,5:c}|"); 
         count++;
     }
+    Console.WriteLine("|_____________________________________________|");
+
 }
 
 //display Receipt
 static void DisplayReceipt(List<Receipt> receipt, decimal cost, string paymentForm)
 {
-    Console.WriteLine("\nReceipt:");
+    Console.WriteLine(" _________________________________________");
+    Console.WriteLine("|\t          Receipt                 |");
+    Console.WriteLine("|_________________________________________|");
 
     foreach (Receipt r in receipt)
     {
-        Console.WriteLine($"{r.Name,-20} {r.Price,50:c}");
+        Console.WriteLine($"|{r.Name,-35} {r.Price,5:c}|");
 
     }
+    Console.WriteLine("|_________________________________________|");
 
     Console.WriteLine($"\nSubtotal: {cost:C}");
     Console.WriteLine($"Sales tax: 6%");
     Console.WriteLine($"Total: {cost * 1.06m:C}");
     Console.WriteLine($"\nPayment method {paymentForm}");
-    Console.WriteLine("\nThank you for shopping at Mythic Matcha Cafe! Come again soon!");
+    Console.WriteLine("\nTransaction complete.\n");
 }
 
 // Ask for payment type and process payment 
@@ -200,22 +206,22 @@ static void GetPaymentType(decimal totalCost, out string paymentForm)
         if (paymentType == "credit")
         {
             paymentForm += $"Credit: {Math.Round(totalCost, 2):C}";
-            long creditCardNumber = 0;
-            int expirationDate = 0;
-            int CVVNumber = 0;
+            string creditCardNumber = "";
+            string expirationDate = ""; //int.Parse removes 0's at begining
+            string CVVNumber = "";
 
             Console.Write("Enter credit card number: ");
-            while (long.TryParse(Console.ReadLine().Trim(), out creditCardNumber) == false || creditCardNumber.ToString().Length < 16 || creditCardNumber.ToString().Length > 16)
+            while (ValidateNum(out creditCardNumber) == false || creditCardNumber.Length < 16 || creditCardNumber.Length > 16)
             {
                 Console.WriteLine("invalid input, try again...");
             }
             Console.WriteLine("Enter expiration date (MMYY): ");
-            while (int.TryParse(Console.ReadLine().Trim(), out expirationDate) == false || expirationDate.ToString().Length < 4 || expirationDate.ToString().Length > 4)
+            while (ValidateNum(out expirationDate) == false || expirationDate.ToString().Length < 4 || expirationDate.ToString().Length > 4)
             {
                 Console.WriteLine("invalid input, try again...");
             }
             Console.Write("Enter CVV: ");
-            while (int.TryParse(Console.ReadLine().Trim(), out CVVNumber) == false || CVVNumber.ToString().Length < 3 || CVVNumber.ToString().Length > 3)
+            while (ValidateNum(out CVVNumber) == false || CVVNumber.ToString().Length < 3 || CVVNumber.ToString().Length > 3)
             {
                 Console.WriteLine("invalid input, try again...");
             }
@@ -229,9 +235,9 @@ static void GetPaymentType(decimal totalCost, out string paymentForm)
         if (paymentType == "check")
         {
             paymentForm += $"check: {Math.Round(totalCost, 2):C}";
-            int checkNumber;
+            string checkNumber;
             Console.Write("Enter check number: ");
-            while (int.TryParse(Console.ReadLine().Trim(), out checkNumber) == false || checkNumber.ToString().Length < 4 || checkNumber.ToString().Length > 4)
+            while (ValidateNum(out checkNumber) == false || checkNumber.ToString().Length < 4 || checkNumber.ToString().Length > 4)
             {
                 Console.WriteLine("Invalid input.");
             }
@@ -241,5 +247,17 @@ static void GetPaymentType(decimal totalCost, out string paymentForm)
     }
 }
 
-// limit decimal places to 2 digits
-// bug when starting with 0 bc int
+static bool ValidateNum(out string num) 
+{
+    long x = 0;
+    while (true)
+    {
+        string input = Console.ReadLine();
+         if (long.TryParse(input, out x))
+         {
+            num = input;
+            return true;
+         }
+        Console.WriteLine("Invalid input.");
+    }
+}
