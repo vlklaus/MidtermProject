@@ -2,22 +2,48 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
-//menu items and names along with other values
-List<Product> Products = new List<Product>() {
-    new Product("Coffee","Drink",1.50m,"Black Coffee"),
-    new Product("Croissant","Pastry", 2.00m,"Butter Croissant"),
-    new Product("Brownie","Pastry",3.00m,"Chocolate Brownie"),
-    new Product("Caprese Pesto","Sandwich",5.00m,"If you are dreaming of making a café-style sandwich at home then this is a good starting point for you. Fresh tomatoes, creamy mozzarella, spinach, simple seasoning, olive oil, and the balsamic glaze are all layered between two crusty ciabatta bread slices loaded with basil pesto!! I mean what’s not to love about this sandwich. It screams fresh flavors in every bite! Can it get easier than this??"),
-    new Product("Lemon Frosted Cookie","Pastry",1.00m,"Glazed Lemon Cookies feature buttery, citrusy, soft, and perfectly sweet cookies topped with a lemon glaze. These are the best lemon cookies that come together quickly, contain simple ingredients, and don’t even require chilling."),
-    new Product("Matcha Latte","Drink",6.00m,"Matcha latte is a beverage that originates from Japan. It's made from finely ground green tea leaves that are mixed with steamed milk. Unlike other teas, where you steep the leaves and strain them, matcha is made by whisking the powder into water or milk"),
-    new Product("Boba Tea","Drink",4.00m,"Bubble Tea, also known as boba milk tea, is a cold, frothy drink made with a tea base shaken with flavors, sweeteners and/or milk with tapioca pearls at the base of the drink."),
-    new Product("Buffalo Chicken Sandwich ","Sandwich",5.30m,"Blue cheese crumbles. Sliced juicy red onion. Boneless chicken breasts marinated in Buffalo Wings Sauce and blue cheese dressing. Nothing says \"eat me\" more than this spicy chicken sandwich recipe infused with hot buffalo flavor."),
-    new Product("Milk Tea","Drink",4.00m,"Milk tea is a beverage made from tea and milk, and can be served hot or cold. It can include many different types of tea, milk, and spices. For example, milk tea can be made with black tea, bubble tea, or Thai milk tea. Milk tea can also include sweeteners like honey or sugar. The milk mellows and smooths out the tea's flavors, particularly some of the bitter notes found in black tea."),
-    new Product("Milkshake","Drink",4.30m,"A milkshake is a sweet, cold beverage made by blending milk, ice cream, and flavorings. It can also be made with non-dairy products, such as plant milks, and dry ingredients like fruit, nuts, seeds, candy, or cookies. Milkshakes are traditionally served with whipped cream as topping in a tall glass with a straw. "),
-    new Product("Grilled Cheese","Sandwich",4.30m,"Grilled cheese is a classic American sandwich made with buttered and toasted bread and cheese, and is sometimes known as a toasted sandwich or cheese toastie. The sandwich is made by heating slices of cheese between bread slices with butter or mayonnaise on a pan, griddle, or toaster until the bread browns and the cheese melts. Grilled cheese is inexpensive, simple to make, and has the gooey goodness of melted cheese and the crunchy warmth of toasted bread. \r\n\r\nWikipedia\r\nGrilled cheese - Wikipedia\r\nThe grilled cheese (sometimes known as a toasted sandwich or cheese toastie) is a hot cheese sandwich typically prepared by heating slices of cheese between slices of bread with a cooking fat such as butter or mayonnaise on a frying pan, griddle, or sandwich toaster, until the bread browns and the cheese melts.\r\n\r\nNatasha's Kitchen\r\nGrilled Cheese Sandwich Recipe (VIDEO) - Natasha's Kitchen\r\nAug 13, 2021 — What is Grilled Cheese? Grilled cheese is a classic American sandwich that has been around since 1920. It is a hot sandwich made with buttered and toasted bread and originally filled with American cheese, but is now commonly made with one or more different cheeses.\r\n\r\nwisconsincheese.com\r\nGrilled Cheese\r\nIt's got both the gooey goodness of melted cheese and the crunchy warmth of toasted bread. And a grilled cheese sandwich doesn't ask a lot of you – it's inexpensive and simple to make. It's easy-going, too.\r\nGenerative AI is experimental.\r\n"),
-    new Product("Bagel Egg and Cheese Sandwich","Sandwich",5.00m,"An egg sandwich is a sandwich with some kind of cooked egg filling. Fried eggs, scrambled eggs, omelette, sliced boiled eggs and egg salad (a mix of chopped cooked egg and mustard and mayonnaise) are popular options."),
-};
-//Main Code---------------------------------------------------------------------------------------------------------------          Add File IO
+
+string filepath = "../../../menu.txt";
+
+// if file doesn't exist -----------------------------------------------------------------------
+if (File.Exists(filepath) == false)
+{
+    StreamWriter writer = new StreamWriter(filepath);
+    writer.WriteLine("Coffee|Drink|1.50|Black Coffee");
+    writer.WriteLine("Croissant|Pastry|2|Butter Croissant");
+    writer.WriteLine("Brownie|Pastry|3|Chocolate Brownie");
+    writer.WriteLine("Caprese Pesto|Sandwich|5|If you are dreaming of making a café-style sandwich at home then this is a good starting point for you. Fresh tomatoes, creamy mozzarella, spinach, simple seasoning, olive oil, and the balsamic glaze are all layered between two crusty ciabatta bread slices loaded with basil pesto!! I mean what’s not to love about this sandwich. It screams fresh flavors in every bite! Can it get easier than this??");
+    writer.WriteLine("Lemon Frosted Cookie|Pastry|1|Glazed Lemon Cookies feature buttery, citrusy, soft, and perfectly sweet cookies topped with a lemon glaze. These are the best lemon cookies that come together quickly, contain simple ingredients, and don’t even require chilling.");
+    writer.WriteLine("Matcha Latte|Drink|6|Matcha latte is a beverage that originates from Japan. It's made from finely ground green tea leaves that are mixed with steamed milk. Unlike other teas, where you steep the leaves and strain them, matcha is made by whisking the powder into water or milk");
+    writer.WriteLine("Boba Tea|Drink|4|Bubble Tea, also known as boba milk tea, is a cold, frothy drink made with a tea base shaken with flavors, sweeteners and/or milk with tapioca pearls at the base of the drink.");
+    writer.WriteLine("Buffalo Chicken Sandwich|Sandwich|5|Blue cheese crumbles. Sliced juicy red onion. Boneless chicken breasts marinated in Buffalo Wings Sauce and blue cheese dressing. Nothing says \"eat me\" more than this spicy chicken sandwich recipe infused with hot buffalo flavor.");
+    writer.WriteLine("Milk Tea|Drink|4|Milk tea is a beverage made from tea and milk, and can be served hot or cold. It can include many different types of tea, milk, and spices. For example, milk tea can be made with black tea, bubble tea, or Thai milk tea. Milk tea can also include sweeteners like honey or sugar. The milk mellows and smooths out the tea's flavors, particularly some of the bitter notes found in black tea.");
+    writer.WriteLine("Milkshake|Drink|4|A milkshake is a sweet, cold beverage made by blending milk, ice cream, and flavorings. It can also be made with non-dairy products, such as plant milks, and dry ingredients like fruit, nuts, seeds, candy, or cookies. Milkshakes are traditionally served with whipped cream as topping in a tall glass with a straw. ");
+    writer.WriteLine("Grilled Cheese|Sandwich|4|Grilled cheese is a classic American sandwich made with buttered and toasted bread and cheese");
+    writer.WriteLine("Bagel Egg and Cheese Sandwich|Sandwich|5|An egg sandwich is a sandwich with some kind of cooked egg filling. Fried eggs, scrambled eggs, omelette, sliced boiled eggs and egg salad (a mix of chopped cooked egg and mustard and mayonnaise) are popular options.");
+    writer.Close();
+}
+
+
+// reading file and listing -----------------------------------------------------------------------
+List<Product> Products = new List<Product>();
+StreamReader reader = new StreamReader(filepath);
+
+while (true)
+{
+    string line = reader.ReadLine();
+    if (line == null) break; 
+    else
+    {
+        string[] parts = line.Split('|');
+        Product p = new Product(parts[0], parts[1], decimal.Parse(parts[2]), parts[3]);
+    Products.Add(p);
+    }
+}
+reader.Close();
+
+
+//Main Code==============================================================================================================================================================
 while (true)
 {
     List<Receipt> receipt = new List<Receipt>();
@@ -27,14 +53,41 @@ while (true)
 
     while (addMoreItems)
     {
-        // ordering on menu
+        // ordering on menu -----------------------------------------------------------------------
         DisplayMenu(Products);
         Console.WriteLine();
 
-        Console.Write("Please type in the number of the item you would like or type 'quit' to end: ");
-        answer = Console.ReadLine();
+        Console.Write("Please type in the number of the item you would like, type 'add' to add a new item to the menu, or type 'quit' to end: ");
+        answer = Console.ReadLine().Trim().ToLower();
         int input = 0;
-        if (answer.ToLower() == "quit") break;
+
+        // add new item -----------------------------------------------------------------------
+        if (answer == "add")
+        {
+            Console.Write("Enter Name of Item: ");
+            string item = Console.ReadLine().Trim();
+
+            Console.Write("Enter Category of Item: ");
+            string category = Console.ReadLine().Trim();
+
+            Console.Write("Enter Price of Item: ");
+            decimal price = decimal.Parse(Console.ReadLine().Trim());
+
+            Console.Write("Enter Description of Item: ");
+            string description = Console.ReadLine().Trim();
+
+            Product newProduct = new Product(item, category, price, description);
+            Products.Add(newProduct);
+
+            Console.WriteLine("Thank you for adding your product to our menu!");
+
+            continue;
+        }
+
+        // quit to end -----------------------------------------------------------------------
+        if (answer == "quit") break;
+
+        // choosing item on menu -----------------------------------------------------------------------
         while (true)
         {
             try
@@ -53,7 +106,8 @@ while (true)
                 answer = Console.ReadLine();
             }
         }
-        // quantity of item
+
+        // quantity of item -----------------------------------------------------------------------
         int quantity = 0;
         for (int i = 1; i <= Products.Count; i++)
         {
@@ -64,27 +118,27 @@ while (true)
 
                 while (quantity < 1)
                 {
-                    Console.Write("Please enter a valid quantity.");
+                    Console.Write("Please enter a valid quantity. ");
                     quantity = int.Parse(Console.ReadLine());
                 }
-
             }
         }
-        // add items to receipt
+
+        // add items to receipt -----------------------------------------------------------------------
         for (int i = 0; i < quantity; i++)
         {
             receipt.Add(new Receipt(Products[input - 1].Name, Products[input - 1].Price));
         }
 
-        // cost of order
+        // cost of order -----------------------------------------------------------------------
         cost += quantity * Products[input - 1].Price;
         Console.WriteLine($"Your total is {cost:C}");
 
-        // adding more to cart
+        // adding more to cart -----------------------------------------------------------------------
         while (true)
         {
             Console.Write("Would you like to order more? (y/n): ");
-            string response = Console.ReadLine();
+            string response = Console.ReadLine().ToLower().Trim();
 
             if (response == "y")
             {
@@ -98,28 +152,36 @@ while (true)
             }
             else
             {
-                Console.WriteLine("Invalid response.");
+                Console.Write("Invalid response. ");
             }
-
         }
-
-
     }
+
+    // quit program -----------------------------------------------------------------------
     if (answer.ToLower() == "quit") break;
+
+    // caculate cost -----------------------------------------------------------------------
     decimal totalCost = cost * 1.06m;
     Console.WriteLine($"\nSubtotal: {cost:C}");
     Console.WriteLine($"Sales tax: 6%");
     Console.WriteLine($"Total: {totalCost:C}");
 
+    // finishing payment and display receipt -----------------------------------------------------------------------
     string paymentForm = "";
     GetPaymentType(totalCost, out paymentForm);
-
 
     DisplayReceipt(receipt, cost, paymentForm);
 }
 
+// update menu file -----------------------------------------------------------------------
+StreamWriter writer1 = new StreamWriter(filepath);
+foreach (Product p in Products)
+{
+    writer1.WriteLine($"{p.Name}|{p.Categories}|{p.Price}|{p.Description}");
+}
+writer1.Close();
 
-//Methods----------------------------------------------------------------------------------------------
+//Methods==============================================================================================================================================================
 //display menu
 static void DisplayMenu(List<Product> Products)
 {
@@ -136,7 +198,7 @@ static void DisplayMenu(List<Product> Products)
 
 }
 
-//display Receipt
+//display Receipt ----------------------------------------------------------------------------------------------------------------------------
 static void DisplayReceipt(List<Receipt> receipt, decimal cost, string paymentForm)
 {
     Console.WriteLine(" _________________________________________");
@@ -157,26 +219,26 @@ static void DisplayReceipt(List<Receipt> receipt, decimal cost, string paymentFo
     Console.WriteLine("\nTransaction complete.\n");
 }
 
-// Ask for payment type and process payment 
-static void GetPaymentType(decimal totalCost, out string paymentForm)
+// Ask for payment type and process payment -------------------------------------------------------------------------------------------------
+static void GetPaymentType(decimal totalCost, out string paymentForm) 
 {
     paymentForm = "";
 
     while (true)
     {        
-        Console.Write("\nWhat is your payment type? Cash, credit, or check? ");
+        Console.Write("\nWhat is your payment type - cash, credit, or check? ");
         string paymentType = Console.ReadLine().ToLower().Trim();
 
         decimal cashPayment = 0;
 
-        // cash payment type
+        // cash payment type -----------------------------------------------------------------------
         if (paymentType == "cash")
         {
             
             Console.Write("How much is the amount? ");
             while (decimal.TryParse(Console.ReadLine().Trim(), out cashPayment) == false || cashPayment.ToString().Length < 0)
             {
-                Console.WriteLine("Invalid input.");
+                Console.Write("Invalid input. ");
             }
 
             decimal cashBack = totalCost - cashPayment;
@@ -202,7 +264,7 @@ static void GetPaymentType(decimal totalCost, out string paymentForm)
 
         }
 
-        // credit payment type
+        // credit payment type -----------------------------------------------------------------
         if (paymentType == "credit")
         {
             paymentForm += $"Credit: {Math.Round(totalCost, 2):C}";
@@ -211,42 +273,41 @@ static void GetPaymentType(decimal totalCost, out string paymentForm)
             string CVVNumber = "";
 
             Console.Write("Enter credit card number: ");
-            while (ValidateNum(out creditCardNumber) == false || creditCardNumber.Length < 16 || creditCardNumber.Length > 16)
+            while (ValidateNum(out creditCardNumber) == false || creditCardNumber.Length < 16 || creditCardNumber.Length > 16 || long.Parse(creditCardNumber) == 0)
             {
-                Console.WriteLine("invalid input, try again...");
+                Console.Write("Invalid input. ");
             }
-            Console.WriteLine("Enter expiration date (MMYY): ");
-            while (ValidateNum(out expirationDate) == false || expirationDate.ToString().Length < 4 || expirationDate.ToString().Length > 4)
+            Console.Write("Enter expiration date (MMYY): ");
+            while (ValidateNum(out expirationDate) == false || expirationDate.Length < 4 || expirationDate.Length > 4 || int.Parse(expirationDate) < 124)
             {
-                Console.WriteLine("invalid input, try again...");
+                Console.Write("Invalid input. ");
             }
             Console.Write("Enter CVV: ");
-            while (ValidateNum(out CVVNumber) == false || CVVNumber.ToString().Length < 3 || CVVNumber.ToString().Length > 3)
+            while (ValidateNum(out CVVNumber) == false || CVVNumber.Length < 3 || CVVNumber.Length > 4)
             {
-                Console.WriteLine("invalid input, try again...");
+                Console.Write("Invalid input. ");
             }
 
-            //PROCESS payment
-            Console.WriteLine($"Processing credit card payment for {Math.Round(totalCost, 2):C} with card number {creditCardNumber.ToString().Substring(creditCardNumber.ToString().Length-4)}.");
+            Console.WriteLine($"Processing credit card payment for {Math.Round(totalCost, 2):C} with card number {creditCardNumber.Substring(creditCardNumber.Length-4)}.");
             break;
         }
 
-        //check payment
+        //check payment ---------------------------------------------------------------------------
         if (paymentType == "check")
         {
             paymentForm += $"check: {Math.Round(totalCost, 2):C}";
             string checkNumber;
             Console.Write("Enter check number: ");
-            while (ValidateNum(out checkNumber) == false || checkNumber.ToString().Length < 4 || checkNumber.ToString().Length > 4)
+            while (ValidateNum(out checkNumber) == false || checkNumber.Length < 4 || checkNumber.Length > 4)
             {
-                Console.WriteLine("Invalid input.");
+                Console.Write("Invalid input. ");
             }
             Console.WriteLine($"Thank you for payment with check number: {checkNumber}");             
             break ;
         }   
     }
 }
-
+// credit number validation---------------------------------------------------------------------------------------------------------
 static bool ValidateNum(out string num) 
 {
     long x = 0;
@@ -258,6 +319,6 @@ static bool ValidateNum(out string num)
             num = input;
             return true;
          }
-        Console.WriteLine("Invalid input.");
+        Console.Write("Invalid input. ");
     }
 }
