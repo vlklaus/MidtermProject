@@ -64,16 +64,16 @@ while (true)
         // add new item -----------------------------------------------------------------------
         if (answer == "add")
         {
-            Console.Write("Enter Name of Item: ");
+            Console.Write("Enter name of item: ");
             string item = Console.ReadLine().Trim();
 
-            Console.Write("Enter Category of Item: ");
+            Console.Write("Enter category of item: ");
             string category = Console.ReadLine().Trim();
 
-            Console.Write("Enter Price of Item: ");
+            Console.Write("Enter price of item: ");
             decimal price = decimal.Parse(Console.ReadLine().Trim());
 
-            Console.Write("Enter Description of Item: ");
+            Console.Write("Enter description of item: ");
             string description = Console.ReadLine().Trim();
 
             Product newProduct = new Product(item, category, price, description);
@@ -88,23 +88,10 @@ while (true)
         if (answer == "quit") break;
 
         // choosing item on menu -----------------------------------------------------------------------
-        while (true)
+        while (int.TryParse(answer, out input) == false || input < 1 || input > Products.Count)
         {
-            try
-            {
-                input = int.Parse(answer);
-                if (input < 1 || input > Products.Count)
-                {
-                    Console.Write("Invalid input, please choose something on the menu. ");
-                    continue;
-                }
-                break;
-            }
-            catch
-            {
-                Console.Write("Invalid input, please choose something on the menu. ");
-                answer = Console.ReadLine();
-            }
+            Console.Write("Please enter a valid quantity: ");
+            answer = Console.ReadLine();
         }
 
         // quantity of item -----------------------------------------------------------------------
@@ -114,12 +101,10 @@ while (true)
             if (i == input)
             {
                 Console.Write("How many would you like? ");
-                quantity = int.Parse(Console.ReadLine());
 
-                while (quantity < 1)
+                while (int.TryParse(Console.ReadLine(),out quantity) == false || quantity < 1)
                 {
-                    Console.Write("Please enter a valid quantity. ");
-                    quantity = int.Parse(Console.ReadLine());
+                    Console.Write("Please enter a valid quantity: ");
                 }
             }
         }
@@ -152,7 +137,7 @@ while (true)
             }
             else
             {
-                Console.Write("Invalid response. ");
+                Console.Write("Invalid response. Enter y/n: ");
             }
         }
     }
@@ -236,9 +221,9 @@ static void GetPaymentType(decimal totalCost, out string paymentForm)
         {
             
             Console.Write("How much is the amount? ");
-            while (decimal.TryParse(Console.ReadLine().Trim(), out cashPayment) == false || cashPayment.ToString().Length < 0)
+            while (decimal.TryParse(Console.ReadLine().Trim(), out cashPayment) == false || cashPayment < 0)
             {
-                Console.Write("Invalid input. ");
+                Console.Write("Invalid input. Enter a valid amount: ");
             }
 
             decimal cashBack = totalCost - cashPayment;
@@ -273,19 +258,19 @@ static void GetPaymentType(decimal totalCost, out string paymentForm)
             string CVVNumber = "";
 
             Console.Write("Enter credit card number: ");
-            while (ValidateNum(out creditCardNumber) == false || creditCardNumber.Length < 16 || creditCardNumber.Length > 16 || long.Parse(creditCardNumber) == 0)
+            while (ValidateNum(out creditCardNumber) == false || creditCardNumber.Length < 16 || creditCardNumber.Length > 16)
             {
-                Console.Write("Invalid input. ");
+                Console.Write("Invalid input. Enter a valid credit card number: ");
             }
             Console.Write("Enter expiration date (MMYY): ");
             while (ValidateNum(out expirationDate) == false || expirationDate.Length < 4 || expirationDate.Length > 4 || int.Parse(expirationDate) < 124)
             {
-                Console.Write("Invalid input. ");
+                Console.Write("Invalid input. Enter a valid date: ");
             }
             Console.Write("Enter CVV: ");
             while (ValidateNum(out CVVNumber) == false || CVVNumber.Length < 3 || CVVNumber.Length > 4)
             {
-                Console.Write("Invalid input. ");
+                Console.Write("Invalid input. Enter a valid CVV number: ");
             }
 
             Console.WriteLine($"Processing credit card payment for {Math.Round(totalCost, 2):C} with card number {creditCardNumber.Substring(creditCardNumber.Length-4)}.");
@@ -300,7 +285,7 @@ static void GetPaymentType(decimal totalCost, out string paymentForm)
             Console.Write("Enter check number: ");
             while (ValidateNum(out checkNumber) == false || checkNumber.Length < 4 || checkNumber.Length > 4)
             {
-                Console.Write("Invalid input. ");
+                Console.Write("Invalid input. Enter a valid check number: ");
             }
             Console.WriteLine($"Thank you for payment with check number: {checkNumber}");             
             break ;
@@ -314,11 +299,11 @@ static bool ValidateNum(out string num)
     while (true)
     {
         string input = Console.ReadLine();
-         if (long.TryParse(input, out x))
+         if (long.TryParse(input, out x) && x > 0)
          {
             num = input;
             return true;
          }
-        Console.Write("Invalid input. ");
+        Console.Write("Invalid input. Enter a valid number: ");
     }
 }
